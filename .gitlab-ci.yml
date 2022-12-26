@@ -10,7 +10,6 @@ build website:
   artifacts:
     paths:
       - build
-      - src
 test website:
   stage: test
   image: alpine
