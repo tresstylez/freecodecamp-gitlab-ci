@@ -14,4 +14,4 @@ teste website:
   stage: test
   image: alpine
   script:
-    - test -f build/intex.html
+    - test -f build/index.html
