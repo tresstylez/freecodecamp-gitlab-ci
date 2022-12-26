@@ -1,0 +1,5 @@
+build website:
+  image: node:18-slim
+  script:
+    - yarn install
+    - yarn build
