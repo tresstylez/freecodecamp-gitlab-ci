@@ -9,7 +9,7 @@ build website:
   artifacts:
     paths:
       - build
-# teste website:
-#   image: alpine
-#   script:
-#     - test -f public/intex.html
+teste website:
+  image: alpine
+  script:
+    - test -f public/intex.html
