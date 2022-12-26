@@ -1,5 +1,15 @@
+stages:
+  - build
+  - test
 build website:
   image: node:16-alpine
   script:
     - yarn install
     - yarn build
+  artifacts:
+    paths:
+      - build
+# teste website:
+#   image: alpine
+#   script:
+#     - test -f public/intex.html
