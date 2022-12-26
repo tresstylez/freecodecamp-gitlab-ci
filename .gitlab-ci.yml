@@ -10,7 +10,7 @@ build website:
   artifacts:
     paths:
       - build
-      - package.json
+      - src
 test website:
   stage: test
   image: alpine
