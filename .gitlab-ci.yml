@@ -3,13 +3,7 @@ stages:
   - build
   - build test
   - deploy staging
-  - test staging
   - deploy production
-  - test production
-    
-variables:
-  APP_BASE_URL: http://nemezes-20221231.s3-website-us-east-1.amazonaws.com
-  APP_STAGING_URL: http://nemezes-staging-20221231.s3-website-us-east-1.amazonaws.com/
 
 build website:
   stage: build
@@ -35,40 +29,26 @@ test website:
 
 deploy staging:
   stage: deploy staging
+  environment: staging
   image:
     name: amazon/aws-cli:latest
     entrypoint: [""]
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
   script:
-    - aws --version
     - echo $CI_COMMIT_REF_NAME
-    - aws s3 sync build s3://$AWS_S3_BUCKET_STAGING/ --delete
-
-test staging:
-  stage: test staging
-  image: curlimages/curl
-  rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-  script:
-    - curl $APP_STAGING_URL | grep "React App"
+    - aws s3 sync build s3://$AWS_S3_BUCKET/ --delete
+    - curl $CI_ENVIRONMENT_URL | grep "React App"
 
 deploy production:
   stage: deploy production
+  environment: production
   image:
     name: amazon/aws-cli:latest
     entrypoint: [""]
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
   script:
-    - aws --version
     - echo $CI_COMMIT_REF_NAME
     - aws s3 sync build s3://$AWS_S3_BUCKET/ --delete
-
-test production:
-  stage: test production
-  image: curlimages/curl
-  rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-  script:
-    - curl $APP_BASE_URL | grep "React App"
+    - - curl $CI_ENVIRONMENT_URL	 | grep "React App"
