@@ -5,6 +5,9 @@ stages:
   - deploy staging
   - deploy production
 
+variables:
+  APP_VERSION: $CI_PIPELINE_IID
+
 build website:
   stage: build
   image: node:16-alpine
@@ -13,7 +16,7 @@ build website:
     - yarn lint
     - yarn test
     - yarn build
-    - echo $CI_PIPELINE_ID > build/version.html
+    - echo $APP_VERSION > build/version.html
   artifacts:
     paths:
       - build
@@ -27,7 +30,6 @@ test website:
     - serve -s build &
     - sleep 10
     - curl http://localhost:3000 | grep "React App"
-    - curl http://localhost:3000/version.html
 
 .deploy:
   image:
@@ -39,7 +41,7 @@ test website:
     - echo $CI_COMMIT_REF_NAME
     - aws s3 sync build s3://$AWS_S3_BUCKET/ --delete
     - curl $CI_ENVIRONMENT_URL | grep "React App"
-    - curl $CI_ENVIRONMENT_URL/version.html
+    - curl $CI_ENVIRONMENT_URL/version.html | grep $APP_VERSION
 
 deploy staging:
   stage: deploy staging
